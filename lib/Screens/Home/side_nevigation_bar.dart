@@ -2,7 +2,7 @@ import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'homeController.dart';
+import 'home_controller.dart';
 
 class SideNavigationBar extends StatefulWidget {
   const SideNavigationBar({Key? key}) : super(key: key);

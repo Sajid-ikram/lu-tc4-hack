@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:bit_by_bit/helperWidgets/appBar.dart';
+import 'package:bit_by_bit/providers/product_provider.dart';
 import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as storage;
@@ -48,8 +49,13 @@ class _AddProductState extends State<AddProduct> {
 
       final result = await ref.putFile(_imageFile);
       final url = await result.ref.getDownloadURL();
-      Provider.of<ProfileProvider>(context, listen: false)
-          .updateProfileUrl(url, auth.currentUser!.uid);
+      Provider.of<ProductProvider>(context, listen: false).addProductUrl(
+        url: url,
+        category: dropdownValue,
+        description: descriptionController.text,
+        name: productNameController.text,
+        price: priceController.text,
+      );
       Navigator.of(context, rootNavigator: true).pop();
       Navigator.pop(context);
     } catch (e) {
@@ -94,12 +100,16 @@ class _AddProductState extends State<AddProduct> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.upload,color: Colors.black,size: 18,),
+                            const Icon(
+                              Icons.upload,
+                              color: Colors.black,
+                              size: 18,
+                            ),
                             const SizedBox(width: 5),
                             Text(
                               "Select Image",
-                              style:
-                                  TextStyle(color: Colors.black.withOpacity(0.6)),
+                              style: TextStyle(
+                                  color: Colors.black.withOpacity(0.6)),
                             ),
                           ],
                         ),

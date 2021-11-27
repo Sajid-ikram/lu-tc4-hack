@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'invididual_items.dart';
-import 'homeController.dart';
+import 'home_controller.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -43,7 +43,6 @@ class _HomeState extends State<Home> {
 
   Expanded buildItems(BuildContext context) {
     final List<String> titles = [
-      "Popular",
       "Fashion",
       "Electronics",
       "Furniture",
@@ -57,9 +56,9 @@ class _HomeState extends State<Home> {
           context: context,
           child: ListView(
             //physics: BouncingScrollPhysics(),
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             children: <Widget>[
-              SizedBox(
+              const SizedBox(
                 height: 37,
               ),
               Row(

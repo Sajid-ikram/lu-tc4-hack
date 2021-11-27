@@ -2,11 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class ProductProvider extends ChangeNotifier {
-  String profileUrl = '';
-  String profileName = '';
-  String role = '';
-
-  void getUserInfo(String id) async {
+  /*void getUserInfo(String id) async {
     DocumentSnapshot userInfo =
     await FirebaseFirestore.instance.collection('users').doc(id).get();
     profileUrl = userInfo["url"];
@@ -14,20 +10,29 @@ class ProductProvider extends ChangeNotifier {
     role = userInfo["role"];
     notifyListeners();
   }
+*/
 
-
-
-  Future updateProfileUrl(String url, String uid) async {
-
-
-    try{
-      FirebaseFirestore.instance.collection("users").doc(uid).update(
-        {"url": url},
+  Future addProductUrl({
+    required String name,
+    required String description,
+    required String price,
+    required String category,
+    required String url,
+  }) async {
+    try {
+      FirebaseFirestore.instance.collection("products").doc().set(
+        {
+          "name": name,
+          "description": description,
+          "price": price,
+          "category": category,
+          "url": url,
+        },
       );
-      profileUrl = url;
+      print("=========================111");
       notifyListeners();
-    }catch(e){
-
+    } catch (e) {
+      print("=========================222");
     }
   }
 }

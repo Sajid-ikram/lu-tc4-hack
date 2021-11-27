@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import 'homeController.dart';
+import 'home_controller.dart';
 
 class IndividualItems extends StatefulWidget {
   const IndividualItems({Key? key}) : super(key: key);
@@ -95,7 +95,7 @@ class _IndividualItemsState extends State<IndividualItems> {
                     //height: MediaQuery.of(context).size.height * 0.08,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(13),
-                      color: Colors.white,
+                      color: Colors.grey.withOpacity(0.3),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(15, 8, 8, 8),

@@ -13,7 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'Screens/Home/home.dart';
-import 'Screens/Home/homeController.dart';
+import 'Screens/Home/home_controller.dart';
 import 'Screens/cart/cart_screen.dart';
 import 'Screens/login/signIn_and_login.dart';
 import 'Screens/product/productDetailPage.dart';
