@@ -1,4 +1,3 @@
-
 import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,27 +16,19 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage> {
   TextEditingController bidPriceController = TextEditingController();
 
-  @override
-  void initState() {
+  int bidAmount = 0;
 
-    getProductInfo();
-    super.initState();
-  }
-
-  getProductInfo() async {
+  getProductInfo(DocumentSnapshot a) async {
     DocumentSnapshot productInfo = await FirebaseFirestore.instance
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .collection("myBid")
-        .doc()
+        .doc(a.id)
         .get();
     setState(() {
-      print(productInfo["Amount"]);
-      print("------------------------------");
-      isLoading= false;
+      bidAmount = int.parse(productInfo["Amount"]);
+      isLoading = false;
     });
-
-
   }
 
   bool isLoading = true;
@@ -45,6 +36,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as DocumentSnapshot;
+    getProductInfo(args);
+
+    print(bidAmount);
+    print("********************");
+
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
@@ -138,17 +134,27 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
             Text("Product details : ".toString(),
                 style: TextStyle(fontSize: 23, color: Color(0xffFCCFA8))),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(args["description"],
-                style: const TextStyle(fontSize: 16, color: Colors.white)),
-            SizedBox(height: 20),
+            const SizedBox(height: 10),
+            Text(args["description"], style: const TextStyle(fontSize: 16, color: Colors.white)),
+            if (bidAmount != 0)
+            const SizedBox(height: 20),
+            if (bidAmount != 0)
+              Container(
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                    color: Colors.blueGrey.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(10)
+                ),
+
+                child: Text("Your past bid was : "+bidAmount.toString(),
+                    style: const TextStyle(fontSize: 16, color: Colors.white)),
+              ),
+            SizedBox(height: 5),
             Consumer<ProfileProvider>(
               builder: (context, provider, child) {
                 return provider.role != "Seller"
                     ? buildDescriptionContainer(
-                        1, bidPriceController, "Enter Bid amount")
+                        1, bidPriceController, "Enter Bid amount ...")
                     : const SizedBox();
               },
             ),
@@ -183,7 +189,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             .collection("users")
                             .doc(FirebaseAuth.instance.currentUser!.uid)
                             .collection("myBid")
-                            .doc()
+                            .doc(args.id)
                             .set(
                           {
                             "Amount": bidPriceController.text,
