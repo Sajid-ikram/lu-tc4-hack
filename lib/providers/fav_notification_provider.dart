@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
-class CartNotificationProvider extends ChangeNotifier {
+class FavNotificationProvider extends ChangeNotifier {
   bool isCartEmpty = true;
 
   checkIsCartEmpty(String fromWhere) {
@@ -12,7 +12,7 @@ class CartNotificationProvider extends ChangeNotifier {
       FirebaseFirestore.instance
           .collection("users")
           .doc(user!.uid)
-          .collection("cart")
+          .collection("Favourite")
           .limit(1)
           .get()
           .then(

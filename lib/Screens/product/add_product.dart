@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:bit_by_bit/helperWidgets/appBar.dart';
 import 'package:bit_by_bit/providers/product_provider.dart';
-import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as storage;
 import 'package:flutter/cupertino.dart';
@@ -9,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({Key? key}) : super(key: key);
@@ -42,19 +42,22 @@ class _AddProductState extends State<AddProduct> {
   Future uploadProduct() async {
     try {
       buildShowDialog(context);
-      final ref = storage.FirebaseStorage.instance
+      /*final ref = storage.FirebaseStorage.instance
           .ref()
-          .child("profileImage")
-          .child(auth.currentUser!.uid);
+          .child(auth.currentUser!.uid);*/
+
+      final ref = storage.FirebaseStorage.instance.ref().child(
+          "productImage/${DateTime.now()}");
 
       final result = await ref.putFile(_imageFile);
       final url = await result.ref.getDownloadURL();
       Provider.of<ProductProvider>(context, listen: false).addProductUrl(
-        url: url,
-        category: dropdownValue,
-        description: descriptionController.text,
-        name: productNameController.text,
-        price: priceController.text,
+          url: url,
+          category: dropdownValue,
+          description: descriptionController.text,
+          name: productNameController.text,
+          price: priceController.text,
+          date: selectedDate
       );
       Navigator.of(context, rootNavigator: true).pop();
       Navigator.pop(context);
@@ -79,10 +82,14 @@ class _AddProductState extends State<AddProduct> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController productNameController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
+    String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
 
     return Scaffold(
       appBar: customAppBar("Edit Profile", Color(0xff28292E)),
@@ -93,28 +100,28 @@ class _AddProductState extends State<AddProduct> {
               child: isSelected
                   ? Image.file(_imageFile)
                   : Center(
-                      child: TextButton(
-                        onPressed: () {
-                          pickImage(ImageSource.gallery);
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.upload,
-                              color: Colors.black,
-                              size: 18,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              "Select Image",
-                              style: TextStyle(
-                                  color: Colors.black.withOpacity(0.6)),
-                            ),
-                          ],
-                        ),
+                child: TextButton(
+                  onPressed: () {
+                    pickImage(ImageSource.gallery);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.upload,
+                        color: Colors.black,
+                        size: 18,
                       ),
-                    ),
+                      const SizedBox(width: 5),
+                      Text(
+                        "Select Image",
+                        style: TextStyle(
+                            color: Colors.black.withOpacity(0.6)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               margin: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
                 color: Colors.grey,
@@ -125,7 +132,7 @@ class _AddProductState extends State<AddProduct> {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child:
-                  buildDescriptionContainer(1, productNameController, "Name"),
+              buildDescriptionContainer(1, productNameController, "Name"),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -134,23 +141,27 @@ class _AddProductState extends State<AddProduct> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: buildDescriptionContainer(1, priceController, "Price"),
+              child:
+              buildDescriptionContainer(1, priceController, "Minimum Bid"),
             ),
             Container(
               height: 65,
               width: double.infinity,
-              margin: EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                   color: Color(0xff444444),
                   borderRadius: BorderRadius.circular(12)),
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: SizedBox(
-                width: MediaQuery.of(context).size.width - 40,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width - 40,
                 child: DropdownButton<String>(
                   dropdownColor: Color(0xff444444),
                   isExpanded: true,
                   borderRadius: BorderRadius.circular(12),
-                  hint: Text(
+                  hint: const Text(
                     "Buyer",
                     style: TextStyle(fontSize: 18),
                   ),
@@ -184,6 +195,25 @@ class _AddProductState extends State<AddProduct> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Expiration Date : $formattedDate',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _selectDate(context);
+                    },
+                    child: Text('Select date',
+                      style: TextStyle(color: Color(0xffFCCFA8)),),
+                  ),
+                ],
+              ),
+            ),
             buildTextButton(
               "Upload Product",
             ),
@@ -191,6 +221,18 @@ class _AddProductState extends State<AddProduct> {
         ),
       ),
     );
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
   }
 
   Widget buildTextButton(String text) {
@@ -217,7 +259,7 @@ class _AddProductState extends State<AddProduct> {
               ),
             ),
             padding:
-                MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20)),
+            MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20)),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -270,8 +312,8 @@ Widget buildTitleText(String text, double size, double height) {
   );
 }
 
-Container buildDescriptionContainer(
-    int line, TextEditingController descriptionController, String text) {
+Container buildDescriptionContainer(int line,
+    TextEditingController descriptionController, String text) {
   return Container(
     width: double.infinity,
     height: line == 3 ? 90 : 60,

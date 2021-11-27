@@ -1,8 +1,8 @@
-
-import 'package:bit_by_bit/providers/cartNotificationProvider.dart';
-import 'package:bit_by_bit/providers/cart_provider.dart';
+import 'package:bit_by_bit/providers/fav_notification_provider.dart';
+import 'package:bit_by_bit/providers/fav_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -16,10 +16,8 @@ class IndividualItems extends StatefulWidget {
 }
 
 class _IndividualItemsState extends State<IndividualItems> {
-
-
   final Stream<QuerySnapshot> user =
-  FirebaseFirestore.instance.collection("products").snapshots();
+      FirebaseFirestore.instance.collection("products").snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +40,7 @@ class _IndividualItemsState extends State<IndividualItems> {
 
           return Consumer<HomeController>(
             builder: (context, provider, child) {
-              return ListView.builder(
+              return GridView.builder(
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (ctx, index) {
                   if (provider.pageNumber == 3) {
@@ -55,6 +53,10 @@ class _IndividualItemsState extends State<IndividualItems> {
                   return SizedBox();
                 },
                 itemCount: data!.size,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 3 / 4,
+                ),
               );
             },
           );
@@ -64,6 +66,7 @@ class _IndividualItemsState extends State<IndividualItems> {
   }
 
   Widget productCard(QuerySnapshot<Object?> data, int index) {
+
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, "productDetailPage",
@@ -74,9 +77,9 @@ class _IndividualItemsState extends State<IndividualItems> {
       child: Hero(
         tag: data.docs[index].id,
         child: Container(
-          padding: EdgeInsets.all(20),
+          // padding: EdgeInsets.all(20),
           margin: EdgeInsets.fromLTRB(0, 10, 15, 10),
-          height: MediaQuery.of(context).size.height * 0.3,
+          height: MediaQuery.of(context).size.height * 0.4,
           decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(data.docs[index]["url"]),
@@ -92,10 +95,11 @@ class _IndividualItemsState extends State<IndividualItems> {
                   Container(
                     alignment: Alignment.centerLeft,
                     width: double.infinity,
+
                     //height: MediaQuery.of(context).size.height * 0.08,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(13),
-                      color: Colors.grey.withOpacity(0.3),
+                      color: Colors.grey.withOpacity(0.7),
                     ),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(15, 8, 8, 8),
@@ -105,15 +109,19 @@ class _IndividualItemsState extends State<IndividualItems> {
                         children: [
                           Text(
                             data.docs[index]["name"],
+                            overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.poppins(
-                                color: Color(0xFF628395), fontSize: 14),
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
 
                           Text("\$${data.docs[index]["price"].toString()}",
                               style: GoogleFonts.poppins(
-                                  color: Color(0xFF628395),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700)),
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500)),
                           //SizedBox(height: 5),
                         ],
                       ),
@@ -124,13 +132,14 @@ class _IndividualItemsState extends State<IndividualItems> {
                     bottom: 0,
                     child: RawMaterialButton(
                       onPressed: () {
-                        Provider.of<CartProvider>(context, listen: false)
-                            .addProductToCart(data.docs[index]);
-                        Provider.of<CartNotificationProvider>(context, listen: false)
+                        Provider.of<FavProvider>(context, listen: false)
+                            .addProductToFav(data.docs[index]);
+                        Provider.of<FavNotificationProvider>(context,
+                                listen: false)
                             .checkIsCartEmpty("new");
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Item is added to the cart'),
+                            content: Text('Item is added to favourite'),
                             duration: Duration(seconds: 1),
                           ),
                         );
@@ -140,9 +149,9 @@ class _IndividualItemsState extends State<IndividualItems> {
                         minWidth: 0,
                       ),
                       shape: CircleBorder(),
-                      fillColor: Color(0xffec6813),
+
                       padding: EdgeInsets.all(5),
-                      child: Icon(Icons.add, size: 16, color: Colors.white),
+                      child: Icon(FontAwesomeIcons.heart, size: 16, color: Colors.white),
                     ),
                   )
                 ],

@@ -1,10 +1,11 @@
 
 import 'package:bit_by_bit/Screens/Home/side_nevigation_bar.dart';
-import 'package:bit_by_bit/providers/cartNotificationProvider.dart';
+import 'package:bit_by_bit/providers/fav_notification_provider.dart';
 import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'invididual_items.dart';
@@ -23,7 +24,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     Provider.of<ProfileProvider>(context, listen: false).getUserInfo(user!.uid);
-    Provider.of<CartNotificationProvider>(context, listen: false)
+    Provider.of<FavNotificationProvider>(context, listen: false)
         .checkIsCartEmpty("old");
     super.initState();
   }
@@ -71,13 +72,13 @@ class _HomeState extends State<Home> {
                     ),
                     onPressed: () {},
                   ),
-                  Consumer<CartNotificationProvider>(
+                  Consumer<FavNotificationProvider>(
                     builder: (context, provider, child) {
                       return Stack(
                         children: [
                           IconButton(
-                            icon: Icon(
-                              Icons.shopping_cart_outlined,
+                            icon: const Icon(
+                              FontAwesomeIcons.solidHeart,
                               color: Color(0xffFCCFA8),
                             ),
                             onPressed: () {
@@ -87,8 +88,8 @@ class _HomeState extends State<Home> {
                           if (!provider.isCartEmpty)
                             Positioned(
                               child: Container(
-                                height: 8,
-                                width: 8,
+                                height: 9,
+                                width: 9,
                                 padding: EdgeInsets.all(4),
                                 decoration: BoxDecoration(
                                     color: Colors.green,
@@ -98,8 +99,8 @@ class _HomeState extends State<Home> {
                                     ),
                                     borderRadius: BorderRadius.circular(30)),
                               ),
-                              top: 9,
-                              right: 9,
+                              top: 11,
+                              right: 11,
                             )
                         ],
                       );

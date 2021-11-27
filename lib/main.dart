@@ -1,8 +1,8 @@
 
 import 'package:bit_by_bit/Screens/product/add_product.dart';
 import 'package:bit_by_bit/providers/authentication.dart';
-import 'package:bit_by_bit/providers/cartNotificationProvider.dart';
-import 'package:bit_by_bit/providers/cart_provider.dart';
+import 'package:bit_by_bit/providers/fav_notification_provider.dart';
+import 'package:bit_by_bit/providers/fav_provider.dart';
 import 'package:bit_by_bit/providers/product_provider.dart';
 import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:bit_by_bit/providers/warning.dart';
@@ -12,11 +12,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'Screens/Favourite/fav_screen.dart';
 import 'Screens/Home/home.dart';
 import 'Screens/Home/home_controller.dart';
-import 'Screens/cart/cart_screen.dart';
 import 'Screens/login/signIn_and_login.dart';
-import 'Screens/product/productDetailPage.dart';
+import 'Screens/product/product_detail_page.dart';
 import 'Screens/profile/profile.dart';
 import 'Screens/profile/select_image.dart';
 import 'helperWidgets/email_and_home_screen.dart';
@@ -43,18 +43,19 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => Warning()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => HomeController()),
-        ChangeNotifierProvider(create: (_) => CartProvider()),
-        ChangeNotifierProvider(create: (_) => CartNotificationProvider()),
+        ChangeNotifierProvider(create: (_) => FavProvider()),
+        ChangeNotifierProvider(create: (_) => FavNotificationProvider()),
         ChangeNotifierProvider(create: (_) => ProductProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
+
           textTheme: GoogleFonts.poppinsTextTheme(
             Theme.of(context).textTheme,
           ),
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.blueGrey,
           scaffoldBackgroundColor: const Color(0xff28292E),
         ),
         home: FutureBuilder(
@@ -79,7 +80,7 @@ class MyApp extends StatelessWidget {
           "profile": (ctx) => const Profile(),
           "selectImage": (ctx) => const SelectImage(),
           "productDetailPage": (ctx) => const ProductDetailPage(),
-          "cartPage": (ctx) => const CartScreen(),
+          "cartPage": (ctx) => const FavScreen(),
           "AddProduct": (ctx) => const AddProduct(),
         },
       ),
