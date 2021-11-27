@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'package:bit_by_bit/helperWidgets/appBar.dart';
-import 'package:bit_by_bit/providers/profileProvider.dart';
+import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as storage;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,7 +20,6 @@ class _AddProductState extends State<AddProduct> {
   final picker = ImagePicker();
   late File _imageFile;
   bool isSelected = false;
-  TextEditingController productNameController = TextEditingController();
 
   final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -38,7 +38,7 @@ class _AddProductState extends State<AddProduct> {
     } catch (e) {}
   }
 
-  Future uploadProfile() async {
+  Future uploadProduct() async {
     try {
       buildShowDialog(context);
       final ref = storage.FirebaseStorage.instance
@@ -69,9 +69,15 @@ class _AddProductState extends State<AddProduct> {
     );
   }
 
+  String dropdownValue = 'Electronics';
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController productNameController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: customAppBar("Edit Profile", Color(0xff28292E)),
       body: SingleChildScrollView(
@@ -80,29 +86,96 @@ class _AddProductState extends State<AddProduct> {
             Container(
               child: isSelected
                   ? Image.file(_imageFile)
-                  : const Center(child: Text("No Image selected!")),
-              margin: const EdgeInsets.only(bottom: 10),
+                  : Center(
+                      child: TextButton(
+                        onPressed: () {
+                          pickImage(ImageSource.gallery);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.upload,color: Colors.black,size: 18,),
+                            const SizedBox(width: 5),
+                            Text(
+                              "Select Image",
+                              style:
+                                  TextStyle(color: Colors.black.withOpacity(0.6)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+              margin: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
                 color: Colors.grey,
               ),
-              height: size.height * 0.4,
+              height: size.height * 0.3,
               width: double.infinity,
             ),
-            TextFormField(
-                style: TextStyle(color: Colors.white),
-                controller: productNameController,
-                obscureText: true,
-                validator: (value) {
-                  return value == null || value.isEmpty
-                      ? "Enter a Password"
-                      : value.length < 6
-                      ? "Length should be more than 6"
-                      : null;
-                },
-                decoration: buildInputDecoration("Password"))
-            ,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+              child:
+                  buildDescriptionContainer(1, productNameController, "Name"),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+              child: buildDescriptionContainer(
+                  3, descriptionController, "Description"),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+              child: buildDescriptionContainer(1, priceController, "Price"),
+            ),
+            Container(
+              height: 65,
+              width: double.infinity,
+              margin: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color: Color(0xff444444),
+                  borderRadius: BorderRadius.circular(12)),
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width - 40,
+                child: DropdownButton<String>(
+                  dropdownColor: Color(0xff444444),
+                  isExpanded: true,
+                  borderRadius: BorderRadius.circular(12),
+                  hint: Text(
+                    "Buyer",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  value: dropdownValue,
+                  icon: const Icon(Icons.arrow_downward),
+                  iconSize: 18,
+                  elevation: 16,
+                  style: const TextStyle(color: Colors.white),
+                  underline: const SizedBox(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownValue = newValue!;
+                    });
+                  },
+                  items: <String>[
+                    "Electronics",
+                    "Games",
+                    "Accessories",
+                    "Fashion",
+                    "Books",
+                    "Grocery",
+                    "Health Care",
+                    "Sports",
+                    "Others",
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
             buildTextButton(
-              "Upload Profile",
+              "Upload Product",
             ),
           ],
         ),
@@ -117,17 +190,11 @@ class _AddProductState extends State<AddProduct> {
         width: double.infinity,
         child: TextButton(
           onPressed: () {
-            if (text == "Camera") {
-              pickImage(ImageSource.camera);
-            } else if (text == "Gallery") {
-              pickImage(ImageSource.gallery);
-            } else if (text == "Upload Profile") {
-              uploadProfile();
-            }
+            uploadProduct();
           },
           child: Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 16,
               color: Colors.white,
@@ -179,5 +246,33 @@ InputDecoration buildInputDecoration(String text) {
         )),
     hintText: text,
     hintStyle: GoogleFonts.poppins(color: Colors.white),
+  );
+}
+
+Widget buildTitleText(String text, double size, double height) {
+  return Container(
+    alignment: Alignment.centerLeft,
+    width: 220,
+    child: Text(
+      text,
+      style: GoogleFonts.poppins(color: Color(0xffFCCFA8), fontSize: size),
+    ),
+  );
+}
+
+Container buildDescriptionContainer(
+    int line, TextEditingController descriptionController, String text) {
+  return Container(
+    width: double.infinity,
+    height: line == 3 ? 90 : 60,
+    child: TextField(
+      maxLines: line,
+      style: TextStyle(color: Colors.white),
+      autofillHints: [AutofillHints.email],
+      controller: descriptionController,
+      keyboardAppearance: Brightness.light,
+      keyboardType: TextInputType.emailAddress,
+      decoration: buildInputDecoration(text),
+    ),
   );
 }

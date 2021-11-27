@@ -1,5 +1,4 @@
-
-import 'package:bit_by_bit/providers/profileProvider.dart';
+import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,8 +14,6 @@ class SideNavigationBar extends StatefulWidget {
 class _SideNavigationBarState extends State<SideNavigationBar> {
   int _selectedIndex = 3;
   var padding = 8.0;
-  
-
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +76,20 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
                       color: const Color(0xffFCCFA8),
                       onPressed: () {},
                     ),
+                  ),
+                  Consumer<ProfileProvider>(
+                    builder: (context, provider, child) {
+                      return provider.role == "Seller"
+                          ? IconButton(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed("AddProduct");
+                              },
+                              icon: const Icon(
+                                Icons.add_circle_outline,
+                                color: Color(0xffFCCFA8),
+                              ))
+                          : const SizedBox();
+                    },
                   )
                 ],
               ),

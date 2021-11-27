@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:bit_by_bit/helperWidgets/appBar.dart';
-import 'package:bit_by_bit/providers/profileProvider.dart';
+import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as storage;
 import 'package:flutter/material.dart';

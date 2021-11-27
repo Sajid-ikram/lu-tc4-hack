@@ -1,8 +1,10 @@
 
+import 'package:bit_by_bit/Screens/product/add_product.dart';
 import 'package:bit_by_bit/providers/authentication.dart';
 import 'package:bit_by_bit/providers/cartNotificationProvider.dart';
 import 'package:bit_by_bit/providers/cart_provider.dart';
-import 'package:bit_by_bit/providers/profileProvider.dart';
+import 'package:bit_by_bit/providers/product_provider.dart';
+import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:bit_by_bit/providers/warning.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,6 +45,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => HomeController()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => CartNotificationProvider()),
+        ChangeNotifierProvider(create: (_) => ProductProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -77,6 +80,7 @@ class MyApp extends StatelessWidget {
           "selectImage": (ctx) => const SelectImage(),
           "productDetailPage": (ctx) => const ProductDetailPage(),
           "cartPage": (ctx) => const CartScreen(),
+          "AddProduct": (ctx) => const AddProduct(),
         },
       ),
     );

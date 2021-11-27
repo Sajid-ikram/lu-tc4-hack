@@ -1,7 +1,7 @@
 
 import 'package:bit_by_bit/helperWidgets/appBar.dart';
 import 'package:bit_by_bit/providers/authentication.dart';
-import 'package:bit_by_bit/providers/profileProvider.dart';
+import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

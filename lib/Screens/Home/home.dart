@@ -1,7 +1,7 @@
 
 import 'package:bit_by_bit/Screens/Home/side_nevigation_bar.dart';
 import 'package:bit_by_bit/providers/cartNotificationProvider.dart';
-import 'package:bit_by_bit/providers/profileProvider.dart';
+import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
