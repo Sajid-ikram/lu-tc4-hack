@@ -55,7 +55,8 @@ class Authentication with ChangeNotifier {
               "name": name,
               "email": value.user!.email,
               "url": "",
-              "role": role
+              "role": role,
+              "phone" : "+880"
             },
           );
         },

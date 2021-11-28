@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:bit_by_bit/helperWidgets/appBar.dart';
 import 'package:bit_by_bit/providers/product_provider.dart';
+import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as storage;
 import 'package:flutter/cupertino.dart';
@@ -46,8 +47,9 @@ class _AddProductState extends State<AddProduct> {
           .ref()
           .child(auth.currentUser!.uid);*/
 
-      final ref = storage.FirebaseStorage.instance.ref().child(
-          "productImage/${DateTime.now()}");
+      final ref = storage.FirebaseStorage.instance
+          .ref()
+          .child("productImage/${DateTime.now()}");
 
       final result = await ref.putFile(_imageFile);
       final url = await result.ref.getDownloadURL();
@@ -57,8 +59,7 @@ class _AddProductState extends State<AddProduct> {
           description: descriptionController.text,
           name: productNameController.text,
           price: priceController.text,
-          date: selectedDate
-      );
+          date: selectedDate);
       Navigator.of(context, rootNavigator: true).pop();
       Navigator.pop(context);
     } catch (e) {
@@ -86,9 +87,7 @@ class _AddProductState extends State<AddProduct> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
 
     return Scaffold(
@@ -100,28 +99,28 @@ class _AddProductState extends State<AddProduct> {
               child: isSelected
                   ? Image.file(_imageFile)
                   : Center(
-                child: TextButton(
-                  onPressed: () {
-                    pickImage(ImageSource.gallery);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.upload,
-                        color: Colors.black,
-                        size: 18,
+                      child: TextButton(
+                        onPressed: () {
+                          pickImage(ImageSource.gallery);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.upload,
+                              color: Colors.black,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              "Select Image",
+                              style: TextStyle(
+                                  color: Colors.black.withOpacity(0.6)),
+                            ),
+                          ],
+                        ),
                       ),
-                      const SizedBox(width: 5),
-                      Text(
-                        "Select Image",
-                        style: TextStyle(
-                            color: Colors.black.withOpacity(0.6)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                    ),
               margin: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
                 color: Colors.grey,
@@ -132,7 +131,7 @@ class _AddProductState extends State<AddProduct> {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child:
-              buildDescriptionContainer(1, productNameController, "Name"),
+                  buildDescriptionContainer(1, productNameController, "Name"),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -142,7 +141,7 @@ class _AddProductState extends State<AddProduct> {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
               child:
-              buildDescriptionContainer(1, priceController, "Minimum Bid"),
+                  buildDescriptionContainer(1, priceController, "Minimum Bid"),
             ),
             Container(
               height: 65,
@@ -153,10 +152,7 @@ class _AddProductState extends State<AddProduct> {
                   borderRadius: BorderRadius.circular(12)),
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: SizedBox(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width - 40,
+                width: MediaQuery.of(context).size.width - 40,
                 child: DropdownButton<String>(
                   dropdownColor: Color(0xff444444),
                   isExpanded: true,
@@ -208,8 +204,10 @@ class _AddProductState extends State<AddProduct> {
                     onPressed: () {
                       _selectDate(context);
                     },
-                    child: Text('Select date',
-                      style: TextStyle(color: Color(0xffFCCFA8)),),
+                    child: Text(
+                      'Select date',
+                      style: TextStyle(color: Color(0xffFCCFA8)),
+                    ),
                   ),
                 ],
               ),
@@ -259,7 +257,7 @@ class _AddProductState extends State<AddProduct> {
               ),
             ),
             padding:
-            MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20)),
+                MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 20)),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
@@ -312,8 +310,8 @@ Widget buildTitleText(String text, double size, double height) {
   );
 }
 
-Container buildDescriptionContainer(int line,
-    TextEditingController descriptionController, String text) {
+Container buildDescriptionContainer(
+    int line, TextEditingController descriptionController, String text) {
   return Container(
     width: double.infinity,
     height: line == 3 ? 90 : 60,

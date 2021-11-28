@@ -1,4 +1,5 @@
 import 'package:bit_by_bit/providers/profile_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,8 @@ class SideNavigationBar extends StatefulWidget {
 class _SideNavigationBarState extends State<SideNavigationBar> {
   int _selectedIndex = 3;
   var padding = 8.0;
+
+
 
   @override
   Widget build(BuildContext context) {
