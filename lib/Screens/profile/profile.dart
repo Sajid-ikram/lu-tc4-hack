@@ -19,7 +19,7 @@ class _ProfileState extends State<Profile> {
   List<String> items = [
     "Show payment details",
     "Payment history",
-    "Explore new Product",
+    "NID verification",
     "Statistic",
     "Log Out"
   ];
@@ -142,11 +142,16 @@ class _ProfileState extends State<Profile> {
                 ],
               ),
             ),
-            Text(
-              "Sajid ikram",
-              style:
-              GoogleFonts.poppins(color: Color(0xffFCCFA8), fontSize: 22),
-            )
+            Consumer<ProfileProvider>(
+              builder: (context, provider, child) {
+                return Text(
+                  provider.profileName,
+                  style:
+                  GoogleFonts.poppins(color: Color(0xffFCCFA8), fontSize: 22),
+                );
+              },
+            ),
+
           ],
         ),
       ),
@@ -160,6 +165,9 @@ class _ProfileState extends State<Profile> {
         if (text == "Log Out") {
           Provider.of<Authentication>(context, listen: false).signOut();
           Navigator.pop(context);
+        }
+        else if (text == "NID verification") {
+          Navigator.of(context).pushNamed("NIDVerification");
         }
       },
       child: Container(

@@ -223,46 +223,49 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       .collection("bid")
                       .snapshots();
 
-                  return  provider.role == "Seller" ?  StreamBuilder<QuerySnapshot>(
-                      stream: bids,
-                      builder: (context, snapshot) {
-                        final data = snapshot.data;
-                        return ListView.builder(
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              title: Text(
-                                data!.docs[index]["name"],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              subtitle: Text(
-                                  "Bid Amount  : \$" +
-                                      data!.docs[index]["Amount"],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  )),
-                              leading: SizedBox(
-                                height: 50,
-                                width: 50,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image.network(
-                                    data!.docs[index]["url"],
-                                    fit: BoxFit.fill,
+                  return provider.role == "Seller" &&
+                          args["ownerUid"] ==
+                              FirebaseAuth.instance.currentUser!.uid
+                      ? StreamBuilder<QuerySnapshot>(
+                          stream: bids,
+                          builder: (context, snapshot) {
+                            final data = snapshot.data;
+                            return ListView.builder(
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  title: Text(
+                                    data!.docs[index]["name"],
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                              ),
-                              trailing: TextButton(
-                                onPressed: () {},
-                                child: Text("Confirm"),
-                              ),
+                                  subtitle: Text(
+                                      "Bid Amount  : \$" +
+                                          data!.docs[index]["Amount"],
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      )),
+                                  leading: SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: Image.network(
+                                        data!.docs[index]["url"],
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                  trailing: TextButton(
+                                    onPressed: () {},
+                                    child: Text("Confirm"),
+                                  ),
+                                );
+                              },
+                              itemCount: data!.docs.length,
                             );
-                          },
-                          itemCount: data!.docs.length,
-                        );
-                      }) :SizedBox();
-
+                          })
+                      : SizedBox();
                 },
               ),
             ),

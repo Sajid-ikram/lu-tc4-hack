@@ -17,6 +17,7 @@ import 'Screens/Home/home.dart';
 import 'Screens/Home/home_controller.dart';
 import 'Screens/login/signIn_and_login.dart';
 import 'Screens/product/product_detail_page.dart';
+import 'Screens/profile/nid_verification.dart';
 import 'Screens/profile/profile.dart';
 import 'Screens/profile/select_image.dart';
 import 'helperWidgets/email_and_home_screen.dart';
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
           "productDetailPage": (ctx) => const ProductDetailPage(),
           "cartPage": (ctx) => const FavScreen(),
           "AddProduct": (ctx) => const AddProduct(),
+          "NIDVerification": (ctx) => const NIDVerification(),
         },
       ),
     );

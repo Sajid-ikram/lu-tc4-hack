@@ -32,17 +32,17 @@ class _IndividualItemsState extends State<IndividualItems> {
       user = FirebaseFirestore.instance.collection("products").snapshots();
     }
 
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height * 0.8,
       child: StreamBuilder<QuerySnapshot>(
         stream: user,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Text("Something went wrong");
+            return const Text("Something went wrong");
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -52,10 +52,9 @@ class _IndividualItemsState extends State<IndividualItems> {
           return Consumer<HomeController>(
             builder: (context, provider, child) {
               return GridView.builder(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemBuilder: (ctx, index) {
                   return productCard(data!, index);
-                  
                 },
                 itemCount: data!.size,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

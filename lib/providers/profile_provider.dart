@@ -5,6 +5,9 @@ class ProfileProvider extends ChangeNotifier {
   String profileUrl = '';
   String profileName = '';
   String role = '';
+  String nid1 = '';
+  String nid2 = '';
+  String nidNumber = '';
 
   void getUserInfo(String id) async {
     DocumentSnapshot userInfo =
@@ -12,6 +15,9 @@ class ProfileProvider extends ChangeNotifier {
     profileUrl = userInfo["url"];
     profileName = userInfo["name"];
     role = userInfo["role"];
+    nid1 = userInfo["nid1"];
+    nid2 = userInfo["nid2"];
+    nidNumber = userInfo["nidNumber"];
     notifyListeners();
   }
 
