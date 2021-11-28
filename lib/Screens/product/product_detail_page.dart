@@ -1,6 +1,7 @@
 import 'package:bit_by_bit/providers/profile_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,15 +39,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     final args = ModalRoute.of(context)!.settings.arguments as DocumentSnapshot;
     getProductInfo(args);
 
-    print(bidAmount);
-    print("********************");
-
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SingleChildScrollView(
         physics: ClampingScrollPhysics(),
         child: Container(
-          height: size.height * 1.34,
+          height: size.height * 1.64,
           width: size.width,
           child: Stack(
             children: [
@@ -102,7 +100,6 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
   Container buildProductInfo(Size size, DocumentSnapshot args) {
     return Container(
-      height: size.height,
       width: size.width,
       decoration: const BoxDecoration(
         color: Color(0xff28292E),
@@ -135,18 +132,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             Text("Product details : ".toString(),
                 style: TextStyle(fontSize: 23, color: Color(0xffFCCFA8))),
             const SizedBox(height: 10),
-            Text(args["description"], style: const TextStyle(fontSize: 16, color: Colors.white)),
-            if (bidAmount != 0)
-            const SizedBox(height: 20),
+            Text(args["description"],
+                style: const TextStyle(fontSize: 16, color: Colors.white)),
+            if (bidAmount != 0) const SizedBox(height: 20),
             if (bidAmount != 0)
               Container(
                 padding: EdgeInsets.all(8),
                 decoration: BoxDecoration(
                     color: Colors.blueGrey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(10)
-                ),
-
-                child: Text("Your past bid was : "+bidAmount.toString(),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Text("Your past bid was : " + bidAmount.toString(),
                     style: const TextStyle(fontSize: 16, color: Colors.white)),
               ),
             SizedBox(height: 5),
@@ -200,21 +195,78 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       } catch (e) {}
                     }
                   },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 20),
-                    height: 50,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Color(0xffFCCFA8),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Text("Bid Now",
-                        style: TextStyle(fontSize: 16, color: Colors.black)),
-                  ),
+                  child: provider.role != "Seller"
+                      ? Container(
+                          margin: EdgeInsets.symmetric(vertical: 20),
+                          height: 50,
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Color(0xffFCCFA8),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Text("Bid Now",
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.black)),
+                        )
+                      : SizedBox(),
                 );
               },
             ),
+            SizedBox(
+              height: 300,
+              child: Consumer<ProfileProvider>(
+                builder: (context, provider, child) {
+                  final Stream<QuerySnapshot> bids = FirebaseFirestore.instance
+                      .collection("products")
+                      .doc(args.id)
+                      .collection("bid")
+                      .snapshots();
+
+                  return  provider.role == "Seller" ?  StreamBuilder<QuerySnapshot>(
+                      stream: bids,
+                      builder: (context, snapshot) {
+                        final data = snapshot.data;
+                        return ListView.builder(
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(
+                                data!.docs[index]["name"],
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              subtitle: Text(
+                                  "Bid Amount  : \$" +
+                                      data!.docs[index]["Amount"],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  )),
+                              leading: SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Image.network(
+                                    data!.docs[index]["url"],
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                              trailing: TextButton(
+                                onPressed: () {},
+                                child: Text("Confirm"),
+                              ),
+                            );
+                          },
+                          itemCount: data!.docs.length,
+                        );
+                      }) :SizedBox();
+
+                },
+              ),
+            ),
+            SizedBox(height: 40)
           ],
         ),
       ),

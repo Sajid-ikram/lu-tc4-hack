@@ -16,11 +16,20 @@ class IndividualItems extends StatefulWidget {
 }
 
 class _IndividualItemsState extends State<IndividualItems> {
-  final Stream<QuerySnapshot> user =
-      FirebaseFirestore.instance.collection("products").snapshots();
-
   @override
   Widget build(BuildContext context) {
+    var page = Provider.of<HomeController>(context, listen: false);
+
+    Stream<QuerySnapshot> user;
+    if (page.pageNumber != 3) {
+      user = FirebaseFirestore.instance
+          .collection("products")
+          .where("category", isEqualTo: page.titles[page.pageNumber])
+          .snapshots();
+    } else {
+      user = FirebaseFirestore.instance.collection("products").snapshots();
+    }
+
     return Container(
       height: MediaQuery.of(context).size.height * 0.8,
       child: StreamBuilder<QuerySnapshot>(
@@ -43,14 +52,15 @@ class _IndividualItemsState extends State<IndividualItems> {
               return GridView.builder(
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (ctx, index) {
-                  if (provider.pageNumber == 3) {
+                  return productCard(data!, index);
+                  /*if (provider.pageNumber == 3) {
                     return productCard(data!, index);
                   } else if (data!.docs[index]["category"] ==
                       provider.titles[provider.pageNumber]) {
                     return productCard(data, index);
                   }
 
-                  return SizedBox();
+                  return SizedBox();*/
                 },
                 itemCount: data!.size,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -66,7 +76,6 @@ class _IndividualItemsState extends State<IndividualItems> {
   }
 
   Widget productCard(QuerySnapshot<Object?> data, int index) {
-
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, "productDetailPage",
@@ -149,9 +158,9 @@ class _IndividualItemsState extends State<IndividualItems> {
                         minWidth: 0,
                       ),
                       shape: CircleBorder(),
-
                       padding: EdgeInsets.all(5),
-                      child: Icon(FontAwesomeIcons.heart, size: 16, color: Colors.white),
+                      child: Icon(FontAwesomeIcons.heart,
+                          size: 16, color: Colors.white),
                     ),
                   )
                 ],

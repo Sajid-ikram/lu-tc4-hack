@@ -6,7 +6,7 @@ class HomeController extends ChangeNotifier{
   final List<String> titles = [
     "Fashion",
     "Electronics",
-    "Furniture",
+    "Accessories",
     "All"
   ];
 

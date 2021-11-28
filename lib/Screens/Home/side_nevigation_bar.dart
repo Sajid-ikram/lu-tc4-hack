@@ -105,7 +105,7 @@ class _SideNavigationBarState extends State<SideNavigationBar> {
               destinations: [
                 buildRotatedTextRailDestination("Fashion", padding),
                 buildRotatedTextRailDestination("Electronics", padding),
-                buildRotatedTextRailDestination("Furniture", padding),
+                buildRotatedTextRailDestination("Accessories", padding),
                 buildRotatedTextRailDestination("All", padding),
               ],
             ),

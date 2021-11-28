@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
     final List<String> titles = [
       "Fashion",
       "Electronics",
-      "Furniture",
+      "Accessories",
       "All"
     ];
     return Expanded(
