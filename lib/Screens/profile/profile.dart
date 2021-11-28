@@ -20,6 +20,7 @@ class _ProfileState extends State<Profile> {
     "Show payment details",
     "Payment history",
     "NID verification",
+    "Update profile",
     "Statistic",
     "Log Out"
   ];
@@ -169,6 +170,9 @@ class _ProfileState extends State<Profile> {
         else if (text == "NID verification") {
           Navigator.of(context).pushNamed("NIDVerification");
         }
+        else if (text == "Update profile") {
+          Navigator.of(context).pushNamed("EditProfile");
+        }
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 5),
@@ -179,7 +183,7 @@ class _ProfileState extends State<Profile> {
               height: 40,
               width: 40,
               child: text == "Log Out"
-                  ? Icon(
+                  ? const Icon(
                 Icons.logout,
                 color: Color(0xffFCCFA8),
               )

@@ -8,6 +8,7 @@ class ProfileProvider extends ChangeNotifier {
   String nid1 = '';
   String nid2 = '';
   String nidNumber = '';
+  String phone = '';
 
   void getUserInfo(String id) async {
     DocumentSnapshot userInfo =
@@ -18,6 +19,7 @@ class ProfileProvider extends ChangeNotifier {
     nid1 = userInfo["nid1"];
     nid2 = userInfo["nid2"];
     nidNumber = userInfo["nidNumber"];
+    phone = userInfo["phone"];
     notifyListeners();
   }
 

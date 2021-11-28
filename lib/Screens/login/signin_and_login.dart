@@ -42,7 +42,7 @@ class _SignInAndSignUpState extends State<SignInAndSignUp> {
         buildShowDialog(context);
         Provider.of<Authentication>(context, listen: false)
             .signUp(emailController.text, passwordController.text,
-                nameController.text, context,dValue)
+                nameController.text, context, dValue)
             .then((value) async {
           if (value != "Success") {
             Provider.of<Warning>(context, listen: false)
@@ -83,17 +83,16 @@ class _SignInAndSignUpState extends State<SignInAndSignUp> {
           );
         });
   }
+
   String dropdownValue = 'Seller';
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: Color(0xFF2B2B2B),
       appBar: AppBar(
         title: Text(
-          "Ecommerce",
+          "qBid",
           style: GoogleFonts.poppins(color: Colors.white),
         ),
         centerTitle: true,
@@ -112,8 +111,11 @@ class _SignInAndSignUpState extends State<SignInAndSignUp> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.20),
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          padding: EdgeInsets.all(40),
+                          child: Center(child: Image.asset("assets/signin.png")),
+                        ),
                         Form(
                           key: _emailKey,
                           child: TextFormField(
@@ -166,48 +168,47 @@ class _SignInAndSignUpState extends State<SignInAndSignUp> {
                               decoration: buildInputDecoration("Password")),
                         ),
                         if (_isSignUp)
-                        Container(
-                          height: 65,
-                          width: double.infinity,
-                          margin: EdgeInsets.symmetric(vertical: 10),
-                          decoration: BoxDecoration(
-                              color: Color(0xff444444),
-                              borderRadius: BorderRadius.circular(12)),
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width - 40,
-                            child: DropdownButton<String>(
-                              dropdownColor: Color(0xff444444),
-                              isExpanded: true,
-                              borderRadius: BorderRadius.circular(12),
-                              hint: Text(
-                                "Buyer",
-                                style: TextStyle(fontSize: 18),
+                          Container(
+                            height: 65,
+                            width: double.infinity,
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                                color: Color(0xff444444),
+                                borderRadius: BorderRadius.circular(12)),
+                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                            child: SizedBox(
+                              width: MediaQuery.of(context).size.width - 40,
+                              child: DropdownButton<String>(
+                                dropdownColor: Color(0xff444444),
+                                isExpanded: true,
+                                borderRadius: BorderRadius.circular(12),
+                                hint: Text(
+                                  "Buyer",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                value: dropdownValue,
+                                icon: const Icon(Icons.arrow_downward),
+                                iconSize: 18,
+                                elevation: 16,
+                                style: const TextStyle(color: Colors.white),
+                                underline: const SizedBox(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownValue = newValue!;
+                                  });
+                                },
+                                items: <String>[
+                                  "Seller",
+                                  "Buyer",
+                                ].map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(value),
+                                  );
+                                }).toList(),
                               ),
-                              value: dropdownValue,
-                              icon: const Icon(Icons.arrow_downward),
-                              iconSize: 18,
-                              elevation: 16,
-                              style: const TextStyle(color: Colors.white),
-                              underline: const SizedBox(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  dropdownValue = newValue!;
-                                });
-                              },
-                              items: <String>[
-                                "Seller",
-                                "Buyer",
-                              ].map<DropdownMenuItem<String>>((String value) {
-
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                );
-                              }).toList(),
                             ),
                           ),
-                        ),
                         SizedBox(height: 25),
                         InkWell(
                           onTap: () {
@@ -292,7 +293,7 @@ class _SignInAndSignUpState extends State<SignInAndSignUp> {
             color: Colors.transparent,
           )),
       hintText: text,
-      hintStyle: GoogleFonts.poppins(color: Colors.white),
+      hintStyle: GoogleFonts.poppins(color: Colors.grey),
     );
   }
 }
