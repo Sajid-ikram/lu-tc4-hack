@@ -18,15 +18,17 @@ class IndividualItems extends StatefulWidget {
 class _IndividualItemsState extends State<IndividualItems> {
   @override
   Widget build(BuildContext context) {
-    var page = Provider.of<HomeController>(context, listen: false);
+    var page = Provider.of<HomeController>(context);
 
     Stream<QuerySnapshot> user;
     if (page.pageNumber != 3) {
+
       user = FirebaseFirestore.instance
           .collection("products")
           .where("category", isEqualTo: page.titles[page.pageNumber])
           .snapshots();
     } else {
+
       user = FirebaseFirestore.instance.collection("products").snapshots();
     }
 
@@ -53,14 +55,7 @@ class _IndividualItemsState extends State<IndividualItems> {
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (ctx, index) {
                   return productCard(data!, index);
-                  /*if (provider.pageNumber == 3) {
-                    return productCard(data!, index);
-                  } else if (data!.docs[index]["category"] ==
-                      provider.titles[provider.pageNumber]) {
-                    return productCard(data, index);
-                  }
-
-                  return SizedBox();*/
+                  
                 },
                 itemCount: data!.size,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
