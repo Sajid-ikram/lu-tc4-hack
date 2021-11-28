@@ -118,7 +118,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               children: [
                 Text(args["name"],
                     style: TextStyle(fontSize: 17, color: Colors.white)),
-                Text("Minimum Bid : \$${args["price"]}".toString(),
+                Text("Minimum Bid : ৳${args["price"]}".toString(),
                     style: TextStyle(fontSize: 17, color: Colors.white)),
               ],
             ),
@@ -240,7 +240,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                     ),
                                   ),
                                   subtitle: Text(
-                                      "Bid Amount  : \$" +
+                                      "Bid Amount  : ৳" +
                                           data!.docs[index]["Amount"],
                                       style: TextStyle(
                                         color: Colors.white,

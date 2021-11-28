@@ -141,7 +141,7 @@ class _FavScreenState extends State<FavScreen> with WidgetsBindingObserver {
                               ),
                             ),
 
-                            Text("\$${data.docs[index]["price"].toString()}",
+                            Text("৳${data.docs[index]["price"].toString()}",
                                 style: GoogleFonts.poppins(
                                     color: Colors.white,
                                     fontSize: 16,

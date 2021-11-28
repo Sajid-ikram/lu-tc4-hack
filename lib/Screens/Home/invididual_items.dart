@@ -120,7 +120,7 @@ class _IndividualItemsState extends State<IndividualItems> {
                             ),
                           ),
 
-                          Text("\$${data.docs[index]["price"].toString()}",
+                          Text("৳${data.docs[index]["price"].toString()}",
                               style: GoogleFonts.poppins(
                                   color: Colors.white,
                                   fontSize: 13,
